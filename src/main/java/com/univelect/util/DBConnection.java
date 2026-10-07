@@ -19,12 +19,20 @@ public final class DBConnection {
             );
         }
 
-        String url = "jdbc:mysql://localhost:3306/univelect_db"
-                + "?useSSL=false"
-                + "&serverTimezone=UTC";
+        String host = System.getenv("DB_HOST");
+        String port = System.getenv("DB_PORT");
+        String database = System.getenv("DB_NAME");
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASSWORD");
 
-        String user = "root";
-        String password = "8885";
+        if (host == null || port == null || database == null
+                || user == null || password == null) {
+            throw new SQLException("Database environment variables are not configured.");
+        }
+
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+                + "?useSSL=true"
+                + "&serverTimezone=UTC";
 
         return DriverManager.getConnection(url, user, password);
     }
