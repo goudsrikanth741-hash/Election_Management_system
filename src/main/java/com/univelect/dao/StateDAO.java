@@ -1,0 +1,10 @@
+package com.univelect.dao;
+import com.univelect.util.DBConnection;
+import java.sql.*;import java.util.*;
+public class StateDAO {
+ public List<Map<String,Object>> positions() throws SQLException {return query("SELECT id,election_id AS electionId,title,description,max_votes AS maxVotes FROM positions ORDER BY id", new String[]{"id","electionId","title","description","maxVotes"});}
+ public List<Map<String,Object>> students() throws SQLException {return query("SELECT id,student_id AS studentId,name,email,department,year,avatar FROM users WHERE role IN ('STUDENT','CANDIDATE') ORDER BY id",new String[]{"id","studentId","name","email","department","year","avatar"});}
+ public List<Map<String,Object>> candidates() throws SQLException {return query("SELECT c.id,c.user_id AS studentId,u.student_id AS studentRef,u.name,u.department,u.year,c.election_id AS electionId,c.position_id AS positionId,p.title AS positionTitle,u.avatar AS photo,c.tagline,c.manifesto,c.status,DATE_FORMAT(c.applied_at,'%b %d, %Y') AS appliedDate FROM candidates c JOIN users u ON u.id=c.user_id JOIN positions p ON p.id=c.position_id ORDER BY c.id",new String[]{"id","studentId","studentRef","name","department","year","electionId","positionId","positionTitle","photo","tagline","manifesto","status","appliedDate"});}
+ public List<Map<String,Object>> votes() throws SQLException {return query("SELECT id,user_id AS studentId,election_id AS electionId,position_id AS positionId,candidate_id AS candidateId,DATE_FORMAT(created_at,'%b %d, %Y • %h:%i %p') AS timestamp,receipt_hash AS hash FROM votes ORDER BY id",new String[]{"id","studentId","electionId","positionId","candidateId","timestamp","hash"});}
+ private List<Map<String,Object>> query(String sql,String[] keys)throws SQLException{List<Map<String,Object>>out=new ArrayList<>();try(Connection c=DBConnection.getConnection();PreparedStatement p=c.prepareStatement(sql);ResultSet r=p.executeQuery()){while(r.next()){Map<String,Object>m=new LinkedHashMap<>();for(String k:keys)m.put(k,r.getObject(k));out.add(m);}}return out;}
+}
