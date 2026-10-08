@@ -19,11 +19,11 @@ public final class DBConnection {
             );
         }
 
-        String host = System.getenv("DB_HOST");
-        String port = System.getenv("DB_PORT");
-        String database = System.getenv("DB_NAME");
-        String user = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+        String host = System.getenv("MYSQLHOST");
+        String port = System.getenv("MYSQLPORT");
+        String database = System.getenv("MYSQLDATABASE");
+        String user = System.getenv("MYSQLUSER");
+        String password = System.getenv("MYSQLPASSWORD");
 
         if (host == null || port == null || database == null
                 || user == null || password == null) {
@@ -31,7 +31,7 @@ public final class DBConnection {
         }
 
         String url = "jdbc:mysql://" + host + ":" + port + "/" + database
-                + "?useSSL=true"
+                + "?useSSL=false"
                 + "&serverTimezone=UTC";
 
         return DriverManager.getConnection(url, user, password);
