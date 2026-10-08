@@ -27,7 +27,9 @@ public final class DBConnection {
 
         if (host == null || port == null || database == null
                 || user == null || password == null) {
-            throw new SQLException("Database environment variables are not configured.");
+            throw new SQLException(
+                    "Database environment variables are not configured."
+            );
         }
 
         String url = "jdbc:mysql://" + host + ":" + port + "/" + database
