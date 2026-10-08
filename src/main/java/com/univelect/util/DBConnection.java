@@ -17,14 +17,22 @@ public class DBConnection {
             );
         }
 
-        String mysqlUrl = System.getenv("MYSQL_URL");
+        String host = System.getenv("MYSQLHOST");
+        String port = System.getenv("MYSQLPORT");
+        String database = System.getenv("MYSQL_DATABASE");
+        String user = System.getenv("MYSQLUSER");
+        String password = System.getenv("MYSQLPASSWORD");
 
-        if (mysqlUrl == null || mysqlUrl.isBlank()) {
+        if (host == null || port == null || database == null
+                || user == null || password == null) {
             throw new SQLException(
-                    "MYSQL_URL environment variable is not configured."
+                    "MySQL environment variables are not configured."
             );
         }
 
-        return DriverManager.getConnection(mysqlUrl);
+        String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + database
+                + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+        return DriverManager.getConnection(jdbcUrl, user, password);
     }
 }
